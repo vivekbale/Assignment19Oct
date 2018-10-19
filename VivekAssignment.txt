@@ -1,0 +1,145 @@
+----------------------------
+1.File Reader
+--------------------------
+import java.io.*;
+public class FileR{
+
+   public static void main(String args[])throws IOException {
+      File file = new File("C:\Users\bvivek\Desktop\Hello1.txt");
+      file.createNewFile();  
+      FileWriter writer = new FileWriter(file); 
+      writer.write("This\n is\n hello world \n"); 
+      writer.flush();
+      writer.close();  
+      FileReader fr = new FileReader(file); 
+      char [] a = new char[50];
+      fr.read(a);   // reads the content to the array  
+      for(char c : a)
+         System.out.print(c);   
+      fr.close();
+   }
+}
+
+
+-----------------------------------------------------------
+
+2.Buffered Reader
+-----------------------------------------------------------
+import java.io.*;  
+public class BufferedReaderExample {  
+    public static void main(String args[])throws Exception{    
+          FileReader fr=new FileReader("C:\mine\Demos.java");    
+          BufferedReader br=new BufferedReader(fr);    
+ 
+          int i;    
+         while((i=br.read())!=-1){  
+          System.out.print((char)i);  
+          }  
+          br.close();    
+          fr.close();    
+    }    
+} 
+
+
+--------------------------------------------------------------------------------------------------------
+3.File Writer
+--------------------------------------------------------------------------
+import java.io.FileWriter;
+import java.io.IOException;
+public class FileW {
+    public static void main(String[] args) {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("C:\Users\vivek\Desktop\hello.txt"); 
+            fileWriter.write(65);
+            fileWriter.write(66);
+            fileWriter.write(67);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (fileWriter != null) {
+                    fileWriter.flush();
+                    fileWriter.close();                 
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------------
+4.Transaction
+-----------------------------------------------
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;  
+class JDBCTransaction{  
+public static void main(String args[])throws Exception{  
+Class.forName("com.mysql.jdbc.Driver");  
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","Capgemini123");  
+con.setAutoCommit(false);  
+Statement stmt=con.createStatement();  
+stmt.executeUpdate("insert into student values(23,'hello'");
+stmt.executeUpdate("insert into student values(24,'hii'");  
+con.commit();  
+con.close();  
+}}  
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+procedure
+----------------
+-----------------------------------
+creating procedure
+--------------------
+CREATE PROCEDURE `book`.`create_author` (IN name VARCHAR(45), email VARCHAR(45))
+BEGIN
+    DECLARE newAuthorID INT;
+     
+    INSERT INTO author (name, email) VALUES (name, email);
+     
+    SET newAuthorID = (SELECT author_id FROM author a WHERE a.name = name);
+     
+    INSERT INTO book (title, description, published, author_id, price, rating)
+        VALUES (CONCAT('Life Story of ', name),
+                CONCAT('Personal Stories of ', name),
+                date('2016-12-30'), newAuthorID, 10.00, 0);
+END
+------------------------------------------------------
+
+calling stored procedure
+----------------------
+import java.sql.*;
+ 
+
+public class StoredProcedureCallExample1 {
+ 
+    public static void main(String[] args) {
+        
+ 
+ 
+        try (
+    Class.forName("com.mysql.jdbc.Driver");  
+        Connection con=DriverManager.getConnection(  
+        "jdbc:mysql://localhost:3306/book","root","Capgemini123");
+ 
+ 
+            CallableStatement statement = conn.prepareCall("{call create_author(?, ?)}");
+        ) {
+ 
+            statement.setString(1, "Bill Gates");
+            statement.setString(2, "bill@microsoft.com");
+ 
+            statement.execute();
+            statement.close();
+ 
+            System.out.println("Stored procedure called successfully!");
+ 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+-----------
